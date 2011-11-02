@@ -24,7 +24,7 @@ module Representer
       end
     end
 
-    def process_single_record(record)
+    def first_pass(record)
       if @lightning_mode
         # Extract the id into an aggregate array
         @ids.push record['id']
