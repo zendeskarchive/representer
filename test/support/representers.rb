@@ -6,9 +6,14 @@ class UserRepresenter < Representer::Base
   attributes "id", "name", "email"
 end
 
+class LightningUserRepresenter < Representer::Lightning
+  namespace  "user"
+  attributes "id", "name", "email"
+end
+
 class MessageRepresenter < Representer::Base
   attributes "id", "body", "user_id"
-  fields     "user"
+  fields     "user", "attachment"
 
   # aggregate "user_id" do |aggregated|
   #   @users = User.where(:id => aggregated).group_by(&:id)
@@ -31,6 +36,22 @@ class MessageRepresenter < Representer::Base
   def user(hash)
     if found = @users[hash.delete('user_id')]
       found.first
+    end
+  end
+
+end
+
+class MessageWithAttachmentRepresenter < MessageRepresenter
+
+  fields "attachment"
+
+  # aggregate "id" do |aggregated|
+  #   @attachments = Attachment.where(:message_id => @ids).group_by(&:id)
+  # end
+
+  def attachment(hash)
+    if found = @users[hash['id']]
+      found
     end
   end
 

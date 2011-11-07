@@ -35,26 +35,22 @@ class Array
 
 end
 
+if defined?(ActiveRecord::Base)
+
+  class ActiveRecord::Base
+    include Representer::Extension::InstanceMethods
+  end
+
+end
+
 if defined?(ActiveRecord::Relation)
 
   class ActiveRecord::Relation
-
     include Representer::Extension::InstanceMethods
 
     def representer_name
       self.klass.name
     end
-
-  end
-
-end
-
-if defined?(ActiveRecord::Base)
-
-  class ActiveRecord::Base
-
-    include Representer::Extension::InstanceMethods
-
   end
 
 end

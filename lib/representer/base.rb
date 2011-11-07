@@ -13,13 +13,13 @@ module Representer
     include Representer::Modules::Preparation
     include Representer::Modules::Passes
 
-    attr_accessor :scope
+    attr_accessor :scope, :aggregates
 
     def initialize(representable, options = {})
-      @representable = representable.is_a?(ActiveRecord::Relation) ? representable.all : representable
+      @representable = representable
       @scope         = options[:scope]
       @options       = options
-      @ids           = []
+      @aggregates    = { "id" => [] }
     end
 
     # "Legacy" aliases

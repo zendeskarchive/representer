@@ -2,11 +2,15 @@ module Representer
   module Modules
     module Passes
 
+      def extract_attributes(record)
+        record.attributes
+      end
+
       def first_pass(record)
-        # Extract the id into an aggregate array
-        @ids.push record.id
         # Cache the attributes into a local variable
-        attributes = record.attributes
+        attributes = extract_attributes(record)
+        # Extract the id into an aggregate array
+        self.aggregates["id"].push attributes['id']
         # Resulting hash
         hash = {}
         # Copy the attributes

@@ -4,3 +4,4 @@ Gemfile.lock
 pkg/*
 bin
 coverage
+test/database.yml
