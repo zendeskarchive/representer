@@ -35,6 +35,10 @@ class Array
 
 end
 
+# The ArrayRepresenter takes care of empty arrays
+class ArrayRepresenter < Representer::Base
+end
+
 if defined?(ActiveRecord::Base)
 
   class ActiveRecord::Base
