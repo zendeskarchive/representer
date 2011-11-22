@@ -15,7 +15,12 @@ module Representer
         end
 
         self.class.representable_methods.each do |method|
-          hash[method] = record.send(method)
+          if method.is_a?(Array)
+            field, method = method
+          else
+            field, method = method, method
+          end
+          hash[field] = record.send(method)
         end
 
         if self.class.representable_namespace
@@ -32,7 +37,12 @@ module Representer
           prepared_hash
         end
         self.class.representable_fields.each do |field|
-          scoped_hash[field] = self.send(field, scoped_hash)
+          if field.is_a?(Array)
+            field, method = field
+          else
+            field, method = field, field
+          end
+          scoped_hash[field] = self.send(method, scoped_hash)
         end
         scoped_hash
       end
