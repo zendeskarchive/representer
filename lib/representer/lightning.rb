@@ -34,7 +34,11 @@ module Representer
         # Extract the id into an aggregate array
         @ids.push record.id
         # Cache the attributes into a local variable
-        attributes = record.attributes
+        attribute_names = self.class.representable_attributes || record.attributes.keys
+        attributes = {}
+        attribute_names.each do |name|
+          attributes[name] = record[name]
+        end
       end
       # Resulting hash
       hash = {}
