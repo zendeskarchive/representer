@@ -8,13 +8,13 @@ ActiveRecord::Base.logger       = Logger.new(nil)
 
 ActiveRecord::Schema.define(:version => 1) do
 
-  create_table "messages", do |t|
+  create_table "messages" do |t|
     t.text     "body"
     t.integer  "user_id"
     t.string   "internal_secret_token"
   end
 
-  create_table "users", do |t|
+  create_table "users" do |t|
     t.string   "name"
     t.string   "email"
     t.string   "internal_secret_token"
