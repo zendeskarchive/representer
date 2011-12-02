@@ -6,7 +6,6 @@ module Representer
 
     def before_prepare
       if @representable.is_a?(ActiveRecord::Relation) and
-         self.class.representable_fields.size == 0 and
          self.class.representable_methods.size == 0
         @representable  = lightning_mode_convert
         @lightning_mode = true
@@ -19,6 +18,10 @@ module Representer
       case result.class.name
         when 'Mysql2::Result'
           result.each(:as => :hash)
+        when 'SQLite3::ResultSet'
+          tmp = []
+          result.each { |r| tmp.push(r)}
+          tmp
         else
           result
       end
