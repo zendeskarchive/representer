@@ -41,6 +41,33 @@ class MessageRepresenter < Representer::Base
 
 end
 
+class SimpleMessageRepresenter < Representer::Simple
+  attributes "id", "body", "user_id"
+  fields     "user", "attachments"
+
+  aggregate "users", "user_id" do |aggregated_ids, representer|
+    scope = User.where(:id => aggregated_ids)
+    UserRepresenter.new(scope).prepare.group_by { |u| u['user']['id'] }
+  end
+
+  aggregate "attachments", "id" do |aggregated_ids, representer|
+    scope = Attachment.where(:message_id => aggregated_ids)
+    MessageAttachmentRepresenter.new(scope).prepare.group_by { |u| u['id'] }
+  end
+
+  def user(record, hash)
+    if found = @aggregated['users'].fetch(record.user_id)
+      found.first['user']
+    end
+  end
+
+  def attachments(record, hash)
+    @aggregated['attachments'].fetch(record.id)
+  end
+
+end
+
+
 class MessageWithAttachmentRepresenter < MessageRepresenter
 
   fields "attachment"

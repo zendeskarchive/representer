@@ -1,4 +1,5 @@
 require 'representer/base'
+require 'representer/simple'
 require 'representer/lightning'
 require 'representer/extensions'
 
