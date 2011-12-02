@@ -30,6 +30,11 @@ module Representer
         @aggregation_blocks ||= {}
         @aggregation_blocks[key] ||= []
         @aggregation_blocks[key].push({ :name => name, :block => block })
+        class_eval <<-STR
+          def aggregated_#{name}
+            @aggregated['#{name}']
+          end
+        STR
       end
 
       def aggregation_keys

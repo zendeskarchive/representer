@@ -10,11 +10,6 @@ module Representer
       prepared.each { |record, hash| second_pass(record, hash) } unless skip_second_pass?
     end
 
-    def first_pass(record)
-      hash = super
-      [record, hash]
-    end
-
     def finalize(prepared)
       prepared = prepared.collect { |record, hash| hash }
       @returns_many ? prepared : prepared[0]
@@ -36,6 +31,36 @@ module Representer
         scoped_hash[field] = self.send(method, record, scoped_hash)
       end
       scoped_hash
+    end
+
+    def first_pass(record)
+      hash = extract_attributes(record)
+
+      aggregate_keys record, hash
+
+      self.class.representable_methods.each do |method|
+        if method.is_a?(Array)
+          field, method = method
+        else
+          field, method = method, method
+        end
+        hash[field] = record.send(method)
+      end
+
+      if self.class.representable_namespace
+        { self.class.representable_namespace => hash }
+      else
+        hash
+      end
+      [record, hash]
+    end
+
+    def aggregate_keys(record, hash)
+      @aggregates['id'].push record.id
+      self.class.aggregation_keys.each do |key|
+        @aggregates[key] ||= []
+        @aggregates[key].push record.send(key)
+      end
     end
 
   end
