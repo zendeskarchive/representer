@@ -17,16 +17,16 @@ module Representer
       def prepare
         before_prepare
         prepared = @representable.collect { |item| first_pass(item) }
-        prepared = after_first_pass(prepared)
+        prepared = after_prepare(prepared)
         prepared.each { |item| second_pass(item) } unless skip_second_pass?
         prepared = after_second_pass(prepared)
         @returns_many ? prepared : prepared[0]
       end
 
-      def after_first_pass(prepared)
+      def after_prepare(prepared)
         prepared
       end
-      alias :after_prepare :after_first_pass
+      alias :after_first_pass :after_prepare
 
       def after_second_pass(prepared)
         prepared
