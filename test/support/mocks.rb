@@ -8,4 +8,8 @@ class MockRecord < Hash
     self[:attributes][attribute]
   end
 
+  def custom_method
+    read_attribute("name").upcase
+  end
+
 end

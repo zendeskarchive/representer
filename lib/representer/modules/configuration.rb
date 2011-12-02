@@ -9,11 +9,15 @@ module Representer
       end
 
       def methods(*args)
-        @representable_methods    = args
+        hash = args.last.is_a?(Hash) ? args.pop : nil
+        @representable_methods = args
+        hash.each { |method, key| @representable_methods.push [key, method] } if hash
       end
 
       def fields(*args)
-        @representable_fields     = args
+        hash = args.last.is_a?(Hash) ? args.pop : nil
+        @representable_fields = args
+        hash.each { |method, key| @representable_fields.push [key, method] } if hash
       end
 
       def namespace(name, plural = nil)

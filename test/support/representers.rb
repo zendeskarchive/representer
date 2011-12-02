@@ -56,3 +56,47 @@ class MessageWithAttachmentRepresenter < MessageRepresenter
   end
 
 end
+
+class DummyPreparationRepresenter < Representer::Base
+
+  attributes "name"
+
+  def first_name(hash)
+    hash["name"].split(" ").first
+  end
+
+end
+
+class DummyPreparationArrayedMethodsRepresenter < Representer::Base
+
+  attributes "name"
+
+  methods ["final_label", "custom_method"]
+  fields  ["custom_label", "custom_field"]
+
+  def first_name(hash)
+    hash["name"].split(" ").first
+  end
+
+  def custom_field(hash)
+    hash["name"].upcase.reverse
+  end
+
+end
+
+class DummyPreparationHashedMethodsRepresenter < Representer::Base
+
+  attributes "name"
+
+  methods "custom_method" => "final_label"
+  fields  "custom_field"  => "custom_label"
+
+  def first_name(hash)
+    hash["name"].split(" ").first
+  end
+
+  def custom_field(hash)
+    hash["name"].upcase.reverse
+  end
+
+end

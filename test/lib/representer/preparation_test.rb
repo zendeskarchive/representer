@@ -1,16 +1,5 @@
 require "test_helper"
 
-class DummyPreparationRepresenter < Representer::Base
-
-  attributes "name"
-
-  def first_name(hash)
-    hash["name"].split(" ").first
-  end
-
-end
-
-
 class Representer::Tests::Preparation < MiniTest::Unit::TestCase
   def setup
     DummyPreparationRepresenter.instance_eval do
@@ -100,6 +89,30 @@ class Representer::Tests::Preparation < MiniTest::Unit::TestCase
     assert_includes result[0]["dummy"], "first_name"
     assert_equal "Peter", result[1]["dummy"]["first_name"]
     assert_includes result[1]["dummy"], "first_name"
+  end
+
+  def test_extracting_the_methods_as_array
+    @representer = DummyPreparationArrayedMethodsRepresenter.new(@dummy)
+    result = @representer.prepare
+    assert_equal "OLIVIA DUNHAM", result['final_label']
+  end
+
+  def test_extracting_the_fields_as_array
+    @representer = DummyPreparationArrayedMethodsRepresenter.new(@dummy)
+    result = @representer.prepare
+    assert_equal "MAHNUD AIVILO", result['custom_label']
+  end
+
+  def test_extracting_the_methods_as_hash
+    @representer = DummyPreparationHashedMethodsRepresenter.new(@dummy)
+    result = @representer.prepare
+    assert_equal "OLIVIA DUNHAM", result['final_label']
+  end
+
+  def test_extracting_the_fields_as_hash
+    @representer = DummyPreparationHashedMethodsRepresenter.new(@dummy)
+    result = @representer.prepare
+    assert_equal "MAHNUD AIVILO", result['custom_label']
   end
 
 end
