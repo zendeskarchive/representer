@@ -14,10 +14,28 @@ module Representer
         end
       end
 
+      def aggregate_keys(hash)
+        @aggregates['id'].push hash['id']
+        self.class.aggregation_keys.each do |key|
+          @aggregates[key] ||= []
+          @aggregates[key].push hash[key]
+        end
+      end
+
+      def load_aggregates
+        @aggregates.each_pair do |key, aggregated_keys|
+          blocks = self.class.aggregation_blocks[key]
+          next unless blocks
+          blocks.each do |entry|
+            @aggregated[entry[:name]] = entry[:block].call(aggregated_keys, self)
+          end
+        end
+      end
+
       def first_pass(record)
         hash = extract_attributes(record)
 
-        @aggregates['id'].push hash['id']
+        aggregate_keys hash
 
         self.class.representable_methods.each do |method|
           if method.is_a?(Array)
@@ -36,6 +54,7 @@ module Representer
       end
 
       def second_pass(prepared_hash)
+        load_aggregates
         scoped_hash = if self.class.representable_namespace
           prepared_hash[self.class.representable_namespace]
         else

@@ -11,32 +11,32 @@ class LightningUserRepresenter < Representer::Lightning
   attributes "id", "name", "email"
 end
 
+class MessageAttachmentRepresenter < Representer::Lightning
+  attributes "id", "filename"
+end
+
 class MessageRepresenter < Representer::Base
   attributes "id", "body", "user_id"
-  fields     "user", "attachment"
+  fields     "user", "attachments"
 
-  # aggregate "user_id" do |aggregated|
-  #   @users = User.where(:id => aggregated).group_by(&:id)
-  # end
-
-  def before_prepare
-    @user_ids = []
+  aggregate "users", "user_id" do |aggregated_ids, representer|
+    scope = User.where(:id => aggregated_ids)
+    UserRepresenter.new(scope).prepare.group_by { |u| u['user']['id'] }
   end
 
-  def after_prepare(prepared)
-    @users = User.where(:id => @user_ids).group_by(&:id)
-    super
-  end
-
-  def first_pass(object)
-    @user_ids.push object.user_id
-    super
+  aggregate "attachments", "id" do |aggregated_ids, representer|
+    scope = Attachment.where(:message_id => aggregated_ids)
+    MessageAttachmentRepresenter.new(scope).prepare.group_by { |u| u['id'] }
   end
 
   def user(hash)
-    if found = @users[hash.delete('user_id')]
-      found.first
+    if found = @aggregated['users'].fetch(hash.delete('user_id'))
+      found.first['user']
     end
+  end
+
+  def attachments(hash)
+    @aggregated['attachments'].fetch(hash['id'])
   end
 
 end

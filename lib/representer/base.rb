@@ -22,6 +22,7 @@ module Representer
       @scope         = options[:scope]
       @options       = options
       @aggregates    = { "id" => [] }
+      @aggregated    = {}
     end
 
     # "Legacy" aliases

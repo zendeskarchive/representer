@@ -11,3 +11,5 @@ gem "sqlite3"
 gem "minitest"
 gem "mocha"
 gem 'mysql2', '~>0.2.0'
+gem "ruby-prof"
+gem 'perftools.rb', :git => 'git://github.com/bearded/perftools.rb.git', :branch => 'perftools-1.8'

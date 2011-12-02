@@ -11,8 +11,10 @@ class Seeder
     Attachment.create(:message => message, :filename => 'photo.jpg')
     Attachment.create(:message => message2, :filename => 'song.mp3')
 
-    MysqlUser.create(:name => 'Walter',  :email => "walter@email.com")
-    MysqlUser.create(:name => 'Astrid',  :email => "astrid@email.com")
+    if defined?(MysqlUser)
+      MysqlUser.create(:name => 'Walter',  :email => "walter@email.com")
+      MysqlUser.create(:name => 'Astrid',  :email => "astrid@email.com")
+    end
 
   end
 end

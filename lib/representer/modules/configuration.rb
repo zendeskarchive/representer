@@ -25,7 +25,20 @@ module Representer
         @representable_namespace_plural  = plural ? plural : name + "s"
       end
 
-      # Readers
+      def aggregate(name, key = 'id', &block)
+        aggregation_keys.push key unless key == 'id' or aggregation_keys.include?(key)
+        @aggregation_blocks ||= {}
+        @aggregation_blocks[key] ||= []
+        @aggregation_blocks[key].push({ :name => name, :block => block })
+      end
+
+      def aggregation_keys
+        @aggregation_keys ||= []
+      end
+
+      def aggregation_blocks
+        @aggregation_blocks ||= {}
+      end
 
       def representable_attributes
         @representable_attributes ||= ['id']
