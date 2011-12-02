@@ -16,12 +16,14 @@ module Representer
 
       def prepare
         before_prepare
-        prepared = if collection?
-          @representable.collect { |item| first_pass(item) }
-        else
-          first_pass(@representable)
-        end
-        after_prepare(prepared)
+        prepared = @representable.collect { |item| first_pass(item) }
+        prepared = after_first_pass(prepared)
+        prepared = after_prepare(prepared)
+        @returns_many ? prepared : prepared[0]
+      end
+
+      def after_first_pass(prepared)
+        prepared
       end
 
       def after_prepare(prepared)
@@ -30,11 +32,7 @@ module Representer
 
         # Run second_pass on each prepared item
         # Second pass will modify the item, so we don't need to capture the output
-        if prepared.is_a?(Array)
-          prepared.each { |item| second_pass(item) }
-        else
-          second_pass(prepared)
-        end
+        prepared.each { |item| second_pass(item) }
 
         prepared
       end
