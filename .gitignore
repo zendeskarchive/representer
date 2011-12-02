@@ -5,5 +5,4 @@ pkg/*
 bin
 coverage
 test/database.yml
-benchmarks
 *.sw[a-z]
