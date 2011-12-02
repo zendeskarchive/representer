@@ -30,19 +30,19 @@ class MessageRepresenter < Representer::Base
   end
 
   def user(hash)
-    if found = @aggregated['users'].fetch(hash.delete('user_id'))
+    if found = aggregated_users[hash['id']]
       found.first['user']
     end
   end
 
   def attachments(hash)
-    @aggregated['attachments'].fetch(hash['id'])
+    aggregated_attachments[hash['id']] || []
   end
 
 end
 
 class SimpleMessageRepresenter < Representer::Simple
-  attributes "id", "body", "user_id"
+  attributes "id", "body"
   fields     "user", "attachments"
 
   aggregate "users", "user_id" do |aggregated_ids, representer|
@@ -56,17 +56,16 @@ class SimpleMessageRepresenter < Representer::Simple
   end
 
   def user(record, hash)
-    if found = @aggregated['users'].fetch(record.user_id)
+    if found = aggregated_users[record.user_id]
       found.first['user']
     end
   end
 
   def attachments(record, hash)
-    @aggregated['attachments'].fetch(record.id)
+    aggregated_attachments[record.id] || []
   end
 
 end
-
 
 class MessageWithAttachmentRepresenter < MessageRepresenter
 
