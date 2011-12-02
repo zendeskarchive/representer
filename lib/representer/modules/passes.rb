@@ -3,23 +3,27 @@ module Representer
     module Passes
 
       def extract_attributes(record)
-        record.attributes
+        # Make the representable_attributes take precedence before the attributes
+        # This allows us to skip the costly ActiveRecord#attributes
+        attribute_names = self.class.representable_attributes || record.attributes.keys
+
+        # Resulting hash
+        attribute_names.inject({}) do |hash, name|
+          hash[name] = record[name]
+          hash
+        end
       end
 
       def first_pass(record)
-        # Cache the attributes into a local variable
-        attributes = extract_attributes(record)
-        # Extract the id into an aggregate array
-        self.aggregates["id"].push attributes['id']
-        # Resulting hash
-        hash = {}
-        # Copy the attributes
-        self.class.representable_attributes.each do |attribute|
-          hash[attribute] = attributes[attribute]
-        end
+        hash = extract_attributes(record)
 
         self.class.representable_methods.each do |method|
-          hash[method] = record.send(method)
+          if method.is_a?(Array)
+            field, method = method
+          else
+            field, method = method, method
+          end
+          hash[field] = record.send(method)
         end
 
         if self.class.representable_namespace
@@ -36,7 +40,12 @@ module Representer
           prepared_hash
         end
         self.class.representable_fields.each do |field|
-          scoped_hash[field] = self.send(field, scoped_hash)
+          if field.is_a?(Array)
+            field, method = field
+          else
+            field, method = field, field
+          end
+          scoped_hash[field] = self.send(method, scoped_hash)
         end
         scoped_hash
       end

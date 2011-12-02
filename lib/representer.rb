@@ -14,10 +14,14 @@ module Representer
     if found = lookup_table[name]
       found
     else
-      found = Object.const_get("#{name.camelcase}Representer")
+      name = "#{name.camelcase}Representer"
+      scopes = name.split("::")
+      found = Object.const_get(scopes.shift)
+      scopes.each do |scope|
+        found = found.const_get(scope)
+      end
       lookup_table[name] = found
       found
     end
   end
-
 end

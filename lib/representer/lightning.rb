@@ -28,7 +28,7 @@ module Representer
     end
 
     def extract_attributes(record)
-      @lightning_mode ? record : record.attributes
+      @lightning_mode ? record : super
     end
 
   end
