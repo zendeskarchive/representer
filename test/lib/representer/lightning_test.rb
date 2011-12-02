@@ -55,7 +55,10 @@ class Representer::Tests::Lightning < MiniTest::Unit::TestCase
 
   def test_first_pass_with_lightning_mode_off
     @representer.lightning_mode = false
-    record = mock(:attributes => @hash)
+    record = mock
+    record.expects(:read_attribute).with('id').returns(@hash['id'])
+    record.expects(:read_attribute).with('name').returns(@hash['name'])
+    record.expects(:read_attribute).with('email').returns(@hash['email'])
     results = @representer.first_pass(record)
     assert_equal @representer.aggregates['id'], [1]
     assert_equal results, { "user" => @expected_hash }
@@ -73,7 +76,7 @@ class Representer::Tests::Lightning < MiniTest::Unit::TestCase
   def test_extracting_the_methods
     @representer.lightning_mode = false
     @representer.class.expects(:representable_methods).returns([:some_method])
-    record = mock(:attributes => @hash)
+    record = MockRecord.new(:attributes => @hash)
     record.expects(:some_method)
     @representer.first_pass(record)
   end

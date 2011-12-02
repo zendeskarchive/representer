@@ -18,7 +18,7 @@ class Representer::Tests::Preparation < MiniTest::Unit::TestCase
       @representable_methods          = nil
       @representable_namespace        = nil
     end
-    @dummy  = mock(:attributes => { "id" => 1, "name" => "Olivia Dunham" })
+    @dummy  = MockRecord.new(:attributes => { "id" => 1, "name" => "Olivia Dunham" })
   end
 
   def test_first_pass_on_single_item
@@ -31,7 +31,7 @@ class Representer::Tests::Preparation < MiniTest::Unit::TestCase
   end
 
   def test_first_pass_on_array
-    @dummy2 = mock(:attributes => { "id" => 2, "name" => "Peter Bishop" })
+    @dummy2 = MockRecord.new(:attributes => { "id" => 2, "name" => "Peter Bishop" })
     @representer = DummyPreparationRepresenter.new([@dummy, @dummy2])
     @dummy.expects(:some_method).returns("foo")
     @dummy2.expects(:some_method).returns("boo")
@@ -66,7 +66,7 @@ class Representer::Tests::Preparation < MiniTest::Unit::TestCase
   end
 
   def test_second_pass_on_array_without_namespace
-    @dummy2 = mock(:attributes => { "id" => 2, "name" => "Peter Bishop" })
+    @dummy2 = MockRecord.new(:attributes => { "id" => 2, "name" => "Peter Bishop" })
     @representer = DummyPreparationRepresenter.new([@dummy, @dummy2])
 
     @dummy.expects(:some_method).never
@@ -90,7 +90,7 @@ class Representer::Tests::Preparation < MiniTest::Unit::TestCase
 
   def test_second_pass_on_array_with_namespace
     DummyPreparationRepresenter.namespace "dummy"
-    @dummy2 = mock(:attributes => { "id" => 2, "name" => "Peter Bishop" })
+    @dummy2 = MockRecord.new(:attributes => { "id" => 2, "name" => "Peter Bishop" })
     @representer = DummyPreparationRepresenter.new([@dummy, @dummy2])
 
     @dummy.expects(:some_method).never

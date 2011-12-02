@@ -6,7 +6,8 @@ module Representer
 
     def before_prepare
       if @representable.is_a?(ActiveRecord::Relation) and
-         self.class.representable_methods.size == 0
+         self.class.representable_methods.size == 0 and
+         self.class.representable_fields.size == 0
         @representable  = lightning_mode_convert
         @lightning_mode = true
       end
@@ -28,7 +29,17 @@ module Representer
     end
 
     def extract_attributes(record)
-      @lightning_mode ? record : super
+      return super unless @lightning_mode
+
+      # Make the representable_attributes take precedence before the attributes
+      # This allows us to skip the costly ActiveRecord#attributes
+      attribute_names = self.class.representable_attributes || record.keys
+
+      # Resulting hash
+      attribute_names.inject({}) do |hash, name|
+        hash[name] = record[name]
+        hash
+      end
     end
 
   end

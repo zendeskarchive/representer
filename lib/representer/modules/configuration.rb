@@ -5,7 +5,7 @@ module Representer
       # Writers
 
       def attributes(*args)
-        @representable_attributes = ['id'] + args
+        @representable_attributes = (['id'] + args).uniq
       end
 
       def methods(*args)

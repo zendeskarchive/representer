@@ -9,13 +9,15 @@ module Representer
 
         # Resulting hash
         attribute_names.inject({}) do |hash, name|
-          hash[name] = record[name]
+          hash[name] = record.read_attribute(name)
           hash
         end
       end
 
       def first_pass(record)
         hash = extract_attributes(record)
+
+        @aggregates['id'].push hash['id']
 
         self.class.representable_methods.each do |method|
           if method.is_a?(Array)
