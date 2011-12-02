@@ -17,34 +17,40 @@ end
 DatabaseConnections.mysql   = loaded
 DatabaseConnections.sqlite3 = { "adapter" => "sqlite3", "database" => ":memory:" }
 
-ActiveRecord::Base.establish_connection DatabaseConnections.sqlite3
+def migrate_database
 
-ActiveRecord::Migration.verbose = false
-ActiveRecord::Base.logger       = Logger.new(nil)
+  ActiveRecord::Migration.verbose = false
+  ActiveRecord::Base.logger       = Logger.new(nil)
+  ActiveRecord::Schema.define(:version => 1) do
 
-ActiveRecord::Schema.define(:version => 1) do
+    drop_table "messages" rescue nil
+    create_table "messages" do |t|
+      t.text     "body"
+      t.integer  "user_id"
+      t.string   "internal_secret_token"
+    end
 
-  drop_table "messages" rescue nil
-  create_table "messages" do |t|
-    t.text     "body"
-    t.integer  "user_id"
-    t.string   "internal_secret_token"
-  end
+    drop_table "attachments" rescue nil
+    create_table "attachments" do |t|
+      t.string   "filename"
+      t.integer  "message_id"
+    end
 
-  drop_table "attachments" rescue nil
-  create_table "attachments" do |t|
-    t.string   "filename"
-    t.integer  "message_id"
-  end
+    drop_table "users" rescue nil
+    create_table "users" do |t|
+      t.string   "name"
+      t.string   "email"
+      t.string   "internal_secret_token"
+    end
 
-  drop_table "users" rescue nil
-  create_table "users" do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "internal_secret_token"
   end
 
 end
+
+ActiveRecord::Base.establish_connection DatabaseConnections.mysql
+migrate_database
+ActiveRecord::Base.establish_connection DatabaseConnections.sqlite3
+migrate_database
 
 class Message < ActiveRecord::Base
   belongs_to :user
@@ -64,4 +70,5 @@ class MysqlUser < ActiveRecord::Base
 end
 
 MysqlUser.establish_connection DatabaseConnections.mysql
+
 MysqlUser.delete_all
