@@ -48,9 +48,7 @@ module Representer
       end
 
       if self.class.representable_namespace
-        { self.class.representable_namespace => hash }
-      else
-        hash
+        hash = { self.class.representable_namespace => hash }
       end
       [record, hash]
     end
