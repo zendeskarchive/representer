@@ -10,6 +10,8 @@ module Representer
         before_prepare
         prepared = @representable.collect { |item| first_pass(item) }
         prepared = after_prepare(prepared)
+        load_aggregates
+
         run_second_pass prepared
         prepared = after_second_pass(prepared)
         finalize prepared

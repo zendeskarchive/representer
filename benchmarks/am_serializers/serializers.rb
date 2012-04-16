@@ -12,13 +12,13 @@ require "./benchmarks/relations/representers"
   message.attachments.create(:filename => "foo.jpg")
 }
 
-# require "active_model_serializers"
+require "active_model_serializers"
 
-# class MessageSerializer < ActiveModel::Serializer
-#   attributes :id, :body, :user_id
-#   has_many :attachments
-#   has_one :user
-# end
+class MessageSerializer < ActiveModel::Serializer
+  attributes :id, :body, :user_id
+  has_many :attachments
+  has_one :user
+end
 
 # require 'roar/representer/json'
 # require 'roar/representer/feature/hypermedia'
@@ -41,7 +41,7 @@ to_json_options = {
   :only => ["id", "body", "user_id"],
   :methods => ["user", "attachments"]
 }
-benchmarker = Benchmarker.new(1)
+benchmarker = Benchmarker.new(50)
 
 
 report = benchmarker.run("simple to_json") do
@@ -51,11 +51,11 @@ end
 
 puts report
 
-# report = benchmarker.run("active model serializer") do
-#   ActiveModel::ArraySerializer.new(get_scope).to_json
-# end
+report = benchmarker.run("active model serializer") do
+  ActiveModel::ArraySerializer.new(get_scope).to_json
+end
 
-# puts report
+puts report
 
 report = benchmarker.run("simple represent") do
   scope = Message.where({}).limit(50)

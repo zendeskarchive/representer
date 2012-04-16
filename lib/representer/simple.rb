@@ -41,7 +41,6 @@ module Representer
     end
 
     def second_pass(record, prepared_hash)
-      load_aggregates
       scoped_hash = if self.class.representable_namespace
         prepared_hash[self.class.representable_namespace]
       else
