@@ -55,13 +55,13 @@ class SimpleMessageRepresenter < Representer::Simple
     MessageAttachmentRepresenter.new(scope).prepare.group_by { |u| u['id'] }
   end
 
-  def user(record, hash)
+  def user(record)
     if found = aggregated_users[record.user_id]
       found.first['user']
     end
   end
 
-  def attachments(record, hash)
+  def attachments(record)
     aggregated_attachments[record.id] || []
   end
 

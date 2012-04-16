@@ -20,9 +20,13 @@ class MessageRepresenter < Representer::Lightning
 
   def after_prepare(prepared)
     scope        = User.where(:id => self.aggregates["user_ids"])
-    @users       = UserRepresenter.new(scope).prepare.group_by { |repr| repr["user"]["id"] }
+    @users       = UserRepresenter.new(scope).prepare.group_by do |repr|
+                    repr["user"]["id"]
+                   end
     scope        = Attachment.where(:message_id => self.aggregates["id"])
-    @attachments = AttachmentRepresenter.new(scope).prepare.group_by { |repr| repr["attachment"]["id"] }
+    @attachments = AttachmentRepresenter.new(scope).prepare.group_by do |repr|
+                    repr["attachment"]["id"]
+                  end
     super
   end
 

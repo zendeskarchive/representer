@@ -2,18 +2,10 @@ module Representer
   module Modules
     module Preparation
 
-      def before_prepare
-      end
-
-      def collection?
-        @representable.is_a?(Array) or @representable.is_a?(ActiveRecord::Relation)
-      end
-
-      # Should we skip the second pass?
-      def skip_second_pass?
-        self.class.representable_fields.size == 0
-      end
-
+      ##
+      # Go through the representable and prepare a Hash which will be passed
+      # to serialization
+      #
       def prepare
         before_prepare
         prepared = @representable.collect { |item| first_pass(item) }
@@ -23,8 +15,36 @@ module Representer
         finalize prepared
       end
 
+      ##
+      # Method called before the first pass and any extraction
+      #
+      def before_prepare
+      end
+
+      ##
+      # Check whether the @representable is a collection of not
+      #
+      # It memoizes the value unless it is nil
+      #
+      # @return Boolean
+      def collection?
+        return @is_collection unless @is_collection.nil?
+        @is_collection = @representable.is_a?(Array) ||
+                         @representable.is_a?(ActiveRecord::Relation)
+      end
+
+      ##
+      # Returns whether we should we skip the second pass
+      #
+      # @return Boolean
+      def skip_second_pass?
+        self.class.representable_fields.size == 0
+      end
+
+      ##
+      # When wrapping up,
       def finalize(prepared)
-        @returns_many ? prepared : prepared[0]
+        collection? ? prepared : prepared[0]
       end
 
       def run_second_pass(prepared)

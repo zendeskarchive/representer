@@ -17,8 +17,7 @@ module Representer
 
     def initialize(representable, options = {})
       @representable = representable
-      @returns_many  = collection?
-      @representable = [@representable] unless @returns_many
+      @representable = [@representable] unless collection?
       @scope         = options[:scope]
       @options       = options
       @aggregates    = { "id" => [] }

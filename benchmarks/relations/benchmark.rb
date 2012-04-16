@@ -20,15 +20,16 @@ to_json_options = {
 }
 
 benchmarker = Benchmarker.new(50)
-scope       = Message.where({}).limit(50)
 
 report = benchmarker.run("simple represent") do
+scope       = Message.where({}).limit(50)
   scope.represent(:json)
 end
 
 puts report
 
 report = benchmarker.run("simple to_json") do
+scope       = Message.where({}).limit(50)
   scope.to_json(to_json_options)
 end
 
