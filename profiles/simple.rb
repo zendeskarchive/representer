@@ -7,6 +7,7 @@ require "./benchmarks/shared/models"
 require "./test/support/seeds"
 require "fileutils"
 require 'perftools'
+require "ruby-prof"
 
 class User
   def first_name
@@ -44,20 +45,20 @@ messages = Message.where({})
 
 FileUtils.mkdir_p('profiles/results')
 
-PerfTools::CpuProfiler.start("profiles/results/simple") do
-  1000.times { users.represent(:json) }
-end
+# PerfTools::CpuProfiler.start("profiles/results/simple") do
+#   1000.times { users.represent(:json) }
+# end
 
-PerfTools::CpuProfiler.start("profiles/results/complex") do
-  1000.times { messages.represent(:json) }
-end
+# PerfTools::CpuProfiler.start("profiles/results/complex") do
+#   1000.times { messages.represent(:json) }
+# end
 
-# RubyProf.start
-# 1000.times { users.represent(:json) }
-# result = RubyProf.stop
-# printer = RubyProf::GraphPrinter.new(result)
+RubyProf.start
+1000.times { users.represent(:json) }
+result = RubyProf.stop
+printer = RubyProf::GraphHtmlPrinter.new(result)
 # printer.print(STDOUT)
-# printer.print(File.open("profiles/results/simple-graph.html", "w"))
+printer.print(File.open("profiles/results/simple-graph.html", "w"))
 
-# printer = RubyProf::CallStackPrinter.new(result)
-# printer.print(File.open("profiles/results/simple-callstack.html", "w"))
+printer = RubyProf::CallStackPrinter.new(result)
+printer.print(File.open("profiles/results/simple-callstack.html", "w"))

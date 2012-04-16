@@ -20,6 +20,7 @@ Here's what happens when you create a new instance of the representer, pass a co
 4. Profit!
 
 ### Example
+
 ```ruby
 class UserRepresenter < Representer::Base
   namespace "user"
@@ -39,9 +40,43 @@ representer = UserRepresenter.new(users)
 representer.render(:json) # { "user": { "id": 1, "name": "Mike", "email": "mike@email.com", "something": "Mike <mike@email.com>" }}
 ```
 
+Representer::Simple
+-------------------
+
+Representer::Base is very good at performance, but it requires you to work
+with hashes. If you prefer to work with ActiveRecord objects, use `Representer::Simple`. It works the same way, but instead of passing the hashes to the methods specified
+in fields, it passes the ActiveRecord instance. It makes the representer code
+cleaner.
+
+Chech out this example:
+
+```ruby
+class SimpleMessageRepresenter < Representer::Simple
+  attributes :id, :body
+  fields     :username
+
+  def username(record)
+    record.user.name.capitalize
+  end
+
+end
+```
+
+Produces:
+
+```json
+{
+  "message" => {
+    "id" => 1,
+    "body" => "WAT",
+    "username" => "Mark"
+  }
+}
+```
+
 Representer::Lightning
 -----------------------------------
 
-Representer::Lightning is a subclass of Representer::Base, which does not instantiate ActiveRecord::Objects,
-but performs a direct SQL call and creates first pass the Array of Hashes using the SQL call result.
-
+Representer::Lightning is a subclass of Representer::Base, which does not
+instantiate ActiveRecord::Objects, but performs a direct SQL call and creates
+first pass the Array of Hashes using the SQL call result.

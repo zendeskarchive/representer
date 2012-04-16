@@ -4,7 +4,13 @@ require "representer"
 require "./benchmarks/shared/benchmarker"
 require "./benchmarks/shared/database"
 require "./benchmarks/shared/models"
-require "./test/support/seeds"
+# require "./test/support/seeds"
+
+1000.times {
+  user = User.create(:name => "some user")
+  message = user.messages.create(:body => "some message")
+  message.attachments.create(:filename => "foo.jpg")
+}
 
 class UserRepresenter < Representer::Base
   namespace  "user"
@@ -60,13 +66,13 @@ class SimpleMessageRepresenter < Representer::Simple
     MessageAttachmentRepresenter.new(scope).prepare.group_by { |u| u['id'] }
   end
 
-  def user(record, hash)
+  def user(record)
     if found = aggregated_users[record.user_id]
       found.first['user']
     end
   end
 
-  def attachments(record, hash)
+  def attachments(record)
     aggregated_attachments[record.id] || []
   end
 
@@ -86,7 +92,7 @@ scope              = Message.where({})
 simple_representer = MessageRepresenter.new(scope)
 
 report = benchmarker.run("base represent") do
-  scope              = Message.where({})
+  scope              = Message.where({}).limit(50)
   base_representer   = MessageRepresenter.new(scope)
   base_representer.render(:json)
 end
@@ -97,7 +103,7 @@ scope              = Message.where({})
 simple_representer = SimpleMessageRepresenter.new(scope)
 
 report = benchmarker.run("simple represent") do
-  scope              = Message.where({})
+  scope              = Message.where({}).limit(50)
   simple_representer = SimpleMessageRepresenter.new(scope)
   simple_representer.render(:json)
 end
