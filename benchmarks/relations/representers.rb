@@ -14,24 +14,32 @@ class AttachmentRepresenter < Representer::Lightning
 end
 
 class MessageRepresenter < Representer::Simple
-  namespace  "message"
-  attributes "id", "body"
-  fields     "user", "attachments"
+  namespace  :message
+  attributes :id, :body
+  fields     :user, :attachments
 
-  aggregate "users", "user_id" do |aggregated_ids, representer|
+  # This is belongs_to
+  aggregate :users, :user_id do |aggregated_ids, representer|
     scope = User.where(:id => aggregated_ids)
-    UserRepresenter.new(scope).prepare.group_by { |u| u['user']['id'] }
-  end
-
-  aggregate "attachments", "id" do |aggregated_ids, representer|
-    scope = Attachment.where(:message_id => aggregated_ids)
-    AttachmentRepresenter.new(scope).prepare.group_by { |u| u['id'] }
+    UserRepresenter.new(scope).prepare.group_by do |u|
+      u['user']['id']
+    end.inject({}) do |memo, item|
+      # We grouped, so we get a hash with ids as keys and single item arrays
+      # as values. Here we convert the array to a value
+      id, serialized = item
+      memo[id] = serialized.first['user']
+      memo
+    end
   end
 
   def user(record)
-    if found = aggregated_users[record.user_id]
-      found.first['user']
-    end
+    aggregated_users[record.user_id]
+  end
+
+  # This is has_many
+  aggregate :attachments, :id do |aggregated_ids, representer|
+    scope = Attachment.where(:message_id => aggregated_ids)
+    AttachmentRepresenter.new(scope).prepare.group_by { |u| u['id'] }
   end
 
   def attachments(record)
