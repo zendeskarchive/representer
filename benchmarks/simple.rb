@@ -20,7 +20,7 @@ class UserRepresenter < Representer::Base
 
 end
 
-benchmarker = Benchmarker.new(50)
+benchmarker = Benchmarker.new(100)
 scope       = User.where({})
 
 report = benchmarker.run("simple represent") do

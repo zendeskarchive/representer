@@ -12,4 +12,5 @@ class Representer::Tests::Simple < MiniTest::Unit::TestCase
     assert_equal "song.mp3", olivia['attachments'].first['filename']
   end
 
+
 end

@@ -15,22 +15,24 @@ require "./benchmarks/relations/representers"
 
 # to_json config
 to_json_options = {
-  :only => ["id", "body", "user_id"],
+  :only => ["id", "body"],
   :methods => ["user", "attachments"]
 }
 
 benchmarker = Benchmarker.new(50)
 
+def get_scope
+  Message.where({}).limit(1)
+end
+
 report = benchmarker.run("simple represent") do
-scope       = Message.where({}).limit(50)
-  scope.represent(:json)
+  get_scope.represent(:json)
 end
 
 puts report
 
 report = benchmarker.run("simple to_json") do
-scope       = Message.where({}).limit(50)
-  scope.to_json(to_json_options)
+  get_scope.to_json(to_json_options)
 end
 
 puts report

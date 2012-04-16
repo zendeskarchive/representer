@@ -7,12 +7,12 @@ class UserRepresenter < Representer::Base
 end
 
 class LightningUserRepresenter < Representer::Lightning
-  namespace  "user"
-  attributes "id", "name", "email"
+  namespace  :user
+  attributes :id, :name, :email
 end
 
 class MessageAttachmentRepresenter < Representer::Lightning
-  attributes "id", "filename"
+  attributes :id, :filename
 end
 
 class MessageRepresenter < Representer::Base
@@ -24,7 +24,7 @@ class MessageRepresenter < Representer::Base
     UserRepresenter.new(scope).prepare.group_by { |u| u['user']['id'] }
   end
 
-  aggregate "attachments", "id" do |aggregated_ids, representer|
+  aggregate :attachments, :id do |aggregated_ids, representer|
     scope = Attachment.where(:message_id => aggregated_ids)
     MessageAttachmentRepresenter.new(scope).prepare.group_by { |u| u['id'] }
   end
@@ -42,15 +42,15 @@ class MessageRepresenter < Representer::Base
 end
 
 class SimpleMessageRepresenter < Representer::Simple
-  attributes "id", "body"
-  fields     "user", "attachments"
+  attributes :id, :body
+  fields     :user, :attachments
 
-  aggregate "users", "user_id" do |aggregated_ids, representer|
+  aggregate :users, :user_id do |aggregated_ids, representer|
     scope = User.where(:id => aggregated_ids)
     UserRepresenter.new(scope).prepare.group_by { |u| u['user']['id'] }
   end
 
-  aggregate "attachments", "id" do |aggregated_ids, representer|
+  aggregate :attachments, :id do |aggregated_ids, representer|
     scope = Attachment.where(:message_id => aggregated_ids)
     MessageAttachmentRepresenter.new(scope).prepare.group_by { |u| u['id'] }
   end
@@ -69,7 +69,7 @@ end
 
 class MessageWithAttachmentRepresenter < MessageRepresenter
 
-  fields "attachment"
+  fields :attachment
 
   # aggregate "id" do |aggregated|
   #   @attachments = Attachment.where(:message_id => @ids).group_by(&:id)
@@ -85,7 +85,7 @@ end
 
 class DummyPreparationRepresenter < Representer::Base
 
-  attributes "name"
+  attributes :name
 
   def first_name(hash)
     hash["name"].split(" ").first
@@ -95,7 +95,7 @@ end
 
 class DummyPreparationArrayedMethodsRepresenter < Representer::Base
 
-  attributes "name"
+  attributes :name
 
   methods ["final_label", "custom_method"]
   fields  ["custom_label", "custom_field"]
@@ -114,8 +114,8 @@ class DummyPreparationHashedMethodsRepresenter < Representer::Base
 
   attributes "name"
 
-  methods "custom_method" => "final_label"
-  fields  "custom_field"  => "custom_label"
+  methods :custom_method => "final_label"
+  fields  :custom_field  => "custom_label"
 
   def first_name(hash)
     hash["name"].split(" ").first
