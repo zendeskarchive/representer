@@ -2,8 +2,8 @@ class SpecRepresenter < Representer::Base
 end
 
 class UserRepresenter < Representer::Base
-  namespace  "user"
-  attributes "id", "name", "email"
+  namespace  :user
+  attributes :id, :name, :email
 end
 
 class LightningUserRepresenter < Representer::Lightning
@@ -16,10 +16,10 @@ class MessageAttachmentRepresenter < Representer::Lightning
 end
 
 class MessageRepresenter < Representer::Base
-  attributes "id", "body", "user_id"
-  fields     "user", "attachments"
+  attributes :id, :body, :user_id
+  fields     :user, :attachments
 
-  aggregate "users", "user_id" do |aggregated_ids, representer|
+  aggregate :users, :user_id do |aggregated_ids, representer|
     scope = User.where(:id => aggregated_ids)
     UserRepresenter.new(scope).prepare.group_by { |u| u['user']['id'] }
   end
