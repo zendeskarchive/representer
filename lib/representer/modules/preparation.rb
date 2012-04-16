@@ -34,6 +34,13 @@ module Representer
       end
 
       ##
+      # Loop through the second pass unless it should be skipped
+      #
+      def run_second_pass(prepared)
+        prepared.each { |item| second_pass(item) } unless skip_second_pass?
+      end
+
+      ##
       # Returns whether we should we skip the second pass
       #
       # @return Boolean
@@ -42,20 +49,25 @@ module Representer
       end
 
       ##
-      # When wrapping up,
+      # When wrapping up, make sure we don't return an array
+      # if it's not a collection
       def finalize(prepared)
         collection? ? prepared : prepared[0]
       end
 
-      def run_second_pass(prepared)
-        prepared.each { |item| second_pass(item) } unless skip_second_pass?
-      end
-
+      ##
+      # Callback called after first pass is complete
+      #
+      # @param Array prepared - array of extracted hashes
+      #
       def after_prepare(prepared)
         prepared
       end
       alias :after_first_pass :after_prepare
 
+      ##
+      # Callback called after the second pass is complete and before finalizing
+      #
       def after_second_pass(prepared)
         prepared
       end
