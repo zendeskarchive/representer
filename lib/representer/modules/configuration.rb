@@ -19,8 +19,10 @@ module Representer
       #
       def methods(*args)
         hash = args.last.is_a?(Hash) ? args.pop : nil
-        @representable_methods = args.collect do |meth|
-          meth.is_a?(Array) ? meth.collect(&:to_s) : meth.to_s
+        @representable_methods ||= []
+        args.collect do |meth|
+          meth = meth.is_a?(Array) ? meth.collect(&:to_s) : meth.to_s
+          @representable_methods.push meth
         end
         hash.each do |method, key|
           @representable_methods.push [key, method]
@@ -29,8 +31,10 @@ module Representer
 
       def fields(*args)
         hash = args.last.is_a?(Hash) ? args.pop : nil
-        @representable_fields = args.collect do |field|
-          field.is_a?(Array) ? field.collect(&:to_s) : field.to_s
+        @representable_fields ||= []
+        args.collect do |field|
+          field = field.is_a?(Array) ? field.collect(&:to_s) : field.to_s
+          @representable_fields.push field
         end
         hash.each do |method, key|
           @representable_fields.push [key, method]

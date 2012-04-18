@@ -70,5 +70,5 @@ class MysqlUser < ActiveRecord::Base
 end
 
 MysqlUser.establish_connection DatabaseConnections.mysql
-
 MysqlUser.delete_all
+

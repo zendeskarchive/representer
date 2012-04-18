@@ -14,40 +14,37 @@ require "./benchmarks/relations/representers"
 
 require "active_model_serializers"
 
+class UserSerializer < ActiveModel::Serializer
+  attributes :id, :name, :email
+end
+
+class AttachmentSerializer < ActiveModel::Serializer
+  attributes :id, :message_id, :filename
+end
+
 class MessageSerializer < ActiveModel::Serializer
-  attributes :id, :body, :user_id
+  attributes :id, :body
   has_many :attachments
   has_one :user
 end
 
-# require 'roar/representer/json'
-# require 'roar/representer/feature/hypermedia'
-
 def get_scope
-  Message.where({}).limit(50)
+  Message.where({}).includes(:user, :attachments).limit(50)
 end
-
-# module MessageRepresenterRoar
-#   include Roar::Representer::JSON
-#   include Roar::Representer::Feature::Hypermedia
-
-#   property :title
-#   property :id
-
-# end
 
 # to_json config
 to_json_options = {
-  :only => ["id", "body", "user_id"],
-  :methods => ["user", "attachments"]
+  :methods => ["user", "attachments"],
+  :only => ["id", "body", "user_id"]
 }
 benchmarker = Benchmarker.new(50)
 
-
 report = benchmarker.run("simple to_json") do
-  scope = Message.where({}).limit(50)
+  scope = get_scope
   scope.to_json(to_json_options)
 end
+
+scope = get_scope
 
 puts report
 
@@ -60,7 +57,6 @@ puts report
 report = benchmarker.run("simple represent") do
   scope = Message.where({}).limit(50)
   MessageRepresenter.new(scope).render(:json)
-  # scope.represent(:json)
 end
 
 puts report

@@ -66,7 +66,7 @@ module Representer
       @aggregates['id'].push record.id
       self.class.aggregation_keys.each do |key|
         @aggregates[key] ||= []
-        @aggregates[key].push record._read_attribute(key)
+        @aggregates[key].push record.read_attribute(key)
       end
     end
 

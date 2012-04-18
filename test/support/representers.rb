@@ -67,6 +67,13 @@ class SimpleMessageRepresenter < Representer::Simple
 
 end
 
+class AssociatedMessageRepresenter < Representer::Simple
+  attributes :id, :body
+
+  belongs_to :user
+  has_many   :attachments, :representer => MessageAttachmentRepresenter
+end
+
 class MessageWithAttachmentRepresenter < MessageRepresenter
 
   fields :attachment
