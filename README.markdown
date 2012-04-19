@@ -122,10 +122,10 @@ Produces:
 
 ```json
 {
-  "message" => {
-    "id" => 1,
-    "body" => "WAT",
-    "username" => "Mark"
+  "message": {
+    "id": 1,
+    "body": "WAT",
+    "username": "Mark"
   }
 }
 ```
