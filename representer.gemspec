@@ -5,7 +5,7 @@ require "representer/version"
 Gem::Specification.new do |s|
   s.name        = "representer"
   s.version     = Representer::VERSION
-  s.authors     = ["Marcin Bunsch", "Michal Bugno", "Antek Piechink"]
+  s.authors     = ["Marcin Bunsch", "Michal Bugno", "Antek Piechnik"]
   s.email       = ["marcin@futuresimple.com"]
   s.homepage    = ""
   s.summary     = %q{Representer - take control of representation of your objects!}
