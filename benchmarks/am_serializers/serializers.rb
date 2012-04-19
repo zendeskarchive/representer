@@ -47,16 +47,17 @@ end
 scope = get_scope
 
 puts report
-
+puts ""
 report = benchmarker.run("active model serializer") do
   ActiveModel::ArraySerializer.new(get_scope).to_json
 end
 
 puts report
-
+puts ""
 report = benchmarker.run("simple represent") do
   scope = Message.where({}).limit(50)
   MessageRepresenter.new(scope).render(:json)
 end
 
 puts report
+puts ""

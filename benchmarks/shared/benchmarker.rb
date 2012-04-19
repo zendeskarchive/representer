@@ -20,8 +20,22 @@ class Benchmarker
       times.sort.first
     end
 
+    def median
+      lowest = times.min
+      highest = times.max
+      total = times.inject(:+)
+      len = times.length
+      average = total.to_f / len # to_f so we don't get an integer result
+      sorted = times.sort
+      median = len % 2 == 1 ? sorted[len/2] : (sorted[len/2 - 1] + sorted[len/2]).to_f / 2
+    end
+
     def average
       times.inject(0.0) { |sum, time| sum += time } / times.size.to_f
+    end
+
+    def sd
+      (median - average).abs
     end
 
     def ms(time)
@@ -30,8 +44,10 @@ class Benchmarker
 
     def to_s
       "Average: #{ms(:average)}ms\n" +
+      "Median: #{ms(:median)}ms\n" +
       "Longest: #{ms(:longest)}ms\n" +
-      "Shortest: #{ms(:shortest)}ms"
+      "Shortest: #{ms(:shortest)}ms\n" +
+      "Standard deviation: #{ms(:sd)}ms\n"
     end
 
   end
