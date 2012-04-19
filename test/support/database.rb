@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
 end
 
 class MysqlUser < ActiveRecord::Base
-  set_table_name "users"
+  self.table_name = "users"
 end
 
 MysqlUser.establish_connection DatabaseConnections.mysql

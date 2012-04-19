@@ -14,4 +14,3 @@ gem 'mysql2'
 gem "ruby-prof"
 gem 'perftools.rb', :git => 'git://github.com/bearded/perftools.rb.git'
 gem "active_model_serializers", :git => 'git://github.com/josevalim/active_model_serializers.git'
-gem "roar", :git => 'git://github.com/apotonick/roar'

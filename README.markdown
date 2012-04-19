@@ -5,7 +5,7 @@ When you're working with a Rails/Sinatra or any other web project, there is a hi
 
 Representer fixes that by introducing an Object Oriented approach to views. You define a class which knows everything about the representation of a Model and use instances of the class to produce the serialized output.
 
-This makes it very simple to customize, test and get sick speeds.
+This makes it very simple to customize output in different situations, test and get sick speeds.
 
 Representer::Base
 -----------------------------------

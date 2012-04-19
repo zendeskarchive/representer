@@ -5,11 +5,11 @@ require "representer/version"
 Gem::Specification.new do |s|
   s.name        = "representer"
   s.version     = Representer::VERSION
-  s.authors     = ["Marcin Bunsch"]
+  s.authors     = ["Marcin Bunsch", "Michal Bugno", "Antek Piechink"]
   s.email       = ["marcin@futuresimple.com"]
   s.homepage    = ""
-  s.summary     = %q{Representers - take control of json/xml representation of your objects!}
-  s.description = %q{Representers - take control of json/xml representation of your objects!}
+  s.summary     = %q{Representer - take control of representation of your objects!}
+  s.description = %q{Representer - take control of representation of your objects!}
 
   s.rubyforge_project = "representer"
 
