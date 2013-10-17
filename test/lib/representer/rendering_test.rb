@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Representer::Tests::Rendering < MiniTest::Unit::TestCase
+class Representer::Tests::Rendering < MiniTest::Test
   def setup
     @collection  = User.where({})
     @representer = UserRepresenter.new(@collection)

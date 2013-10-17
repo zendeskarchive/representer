@@ -3,7 +3,7 @@ require "test_helper"
 class DummyRepresenter < Representer::Base
 end
 
-class Representer::Tests::Configuration < MiniTest::Unit::TestCase
+class Representer::Tests::Configuration < MiniTest::Test
   def setup
     DummyRepresenter.instance_eval do
       @representable_namespace        = nil

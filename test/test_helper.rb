@@ -7,10 +7,8 @@ SimpleCov.start do
   add_filter 'test/'
 end
 
-gem 'minitest'
-require 'minitest/unit'
-MiniTest::Unit.autorun
-require 'mocha'
+require 'minitest/autorun'
+require 'mocha/setup'
 require "mysql2"
 require "active_record"
 require 'representer'

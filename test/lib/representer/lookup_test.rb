@@ -4,7 +4,7 @@ class NotloadedyetRepresenter < Representer::Base
 
 end
 
-class Representer::Tests::Lookup < MiniTest::Unit::TestCase
+class Representer::Tests::Lookup < MiniTest::Test
 
   def setup
     Representer.lookup_table = {}

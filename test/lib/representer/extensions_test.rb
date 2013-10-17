@@ -2,7 +2,7 @@ require "test_helper"
 
 class SimpleRepresenter < Representer::Base
 end
-class Representer::Tests::Extensions < MiniTest::Unit::TestCase
+class Representer::Tests::Extensions < MiniTest::Test
 
   def setup
     Representer.lookup_table = {}
