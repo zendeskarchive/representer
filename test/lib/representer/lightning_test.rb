@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Representer::Tests::Lightning < MiniTest::Unit::TestCase
+class Representer::Tests::Lightning < MiniTest::Test
   def setup
     @collection  = User.where({})
     @representer = LightningUserRepresenter.new(@collection)

@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Representer::Tests::Preparation < MiniTest::Unit::TestCase
+class Representer::Tests::Preparation < MiniTest::Test
   def setup
     DummyPreparationRepresenter.instance_eval do
       @representable_fields           = nil

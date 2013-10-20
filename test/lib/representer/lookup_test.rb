@@ -4,13 +4,13 @@ class NotloadedyetRepresenter < Representer::Base
 
 end
 
-class Representer::Tests::Lookup < MiniTest::Unit::TestCase
+class Representer::Tests::Lookup < MiniTest::Test
 
   def setup
     Representer.lookup_table = {}
   end
 
-  def test_lookup_when_not_loaded
+  def test_single_lookup_when_not_loaded
     Representer.expects(:lookup_constant).with("NotloadedyetRepresenter").returns("foo")
     assert_equal "foo", Representer.lookup("Notloadedyet")
   end

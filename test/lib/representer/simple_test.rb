@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Representer::Tests::Simple < MiniTest::Unit::TestCase
+class Representer::Tests::Simple < MiniTest::Test
 
   def test_aggregation
     scope = Message.where({})

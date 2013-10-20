@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Representer::Tests::Association < MiniTest::Unit::TestCase
+class Representer::Tests::Association < MiniTest::Test
 
   def test_has_many_association_fields
     fields = AssociatedMessageRepresenter.representable_fields
